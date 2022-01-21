@@ -1,16 +1,17 @@
+#zad 1
 #Scharakteryzuj 5 wybranych zmiennych: minimum, pierwszy kwartyl, medina, œrednia, trzeci kwartyl, maksimum, odchylenie standardowe, wybran¹ miarê asymetrii i koncentracji w ka¿dej z 6 grup: wina czerwone z Katanii, wina bia³e z Katanii, wina czerwone z Bolonii itd.
 library(e1071)
 x1<-subset(cos,cos$region=="Bolonia")
 x1<-subset(x1,x1$color=="white")
 BoloniaWMin<-mapply(min,x1[,c(3,4,5,6,7 )])
 BoloniaWMax<-mapply(max,x1[,c(3,4,5,6,7 )])
-BoloniaWMean<-mapply(mean,x1[,c(3,4,5,6,7 )])
+BoloniaWMean<-mapply(mean,x1[,c(3,4,5,6,7 )])#srednia
 BoloniaWMedian<-mapply(median,x1[,c(3,4,5,6,7 )])
-BoloniaWSd<-mapply(sd,x1[,c(3,4,5,6,7 )])
-BoloniaWQ1<-mapply(quantile,x1[,c(3,4,5,6,7 )],0,25,na.rm=TRUE)
+BoloniaWSd<-mapply(sd,x1[,c(3,4,5,6,7 )])#odchylenie standardowe
+BoloniaWQ1<-mapply(quantile,x1[,c(3,4,5,6,7 )],0,25,na.rm=TRUE)#kwartyl pierwszy
 BoloniaWQ3<-mapply(quantile,x1[,c(3,4,5,6,7 )],0,75,na.rm=TRUE)
-BoloniaWPerson<-3*(BoloniaWMean-BoloniaWMedian)/BoloniaWSd
-BoloniaWKurtiza<-mapply(kurtosis,x1[,c(3,4,5,6,7 )])
+BoloniaWPerson<-3*(BoloniaWMean-BoloniaWMedian)/BoloniaWSd#asymetria
+BoloniaWKurtiza<-mapply(kurtosis,x1[,c(3,4,5,6,7 )])#koncentracja
 
 x2<-subset(cos,cos$region=="Bolonia")
 x2<-subset(x2,x2$color=="red")
@@ -79,17 +80,58 @@ CataniaRKurtiza<-mapply(kurtosis,x6[,c(3,4,5,6,7 )])
 
 library(normtest)
 
+#zad 6
 
 #Zbuduj 95% przedzia³ ufnoœci dla œredniej i wariancji dla dwóch wybranych zmiennych osobno dla win z Bolonii, Katanii i Emilii Romany
 x51<-subset(cos,cos$region=="Catania")
-
-Q1.N        <- length(x51$`fixed acidity`)# rozmiar probki
-Q1.mean     <- mapply(mean,x6[,c(3,4 )])  
-Q1.sd       <- mapply(sd,x6[,c(3,4)])
+#œrednia
+Q1.N        <- length(x52$`fixed acidity`)# rozmiar probki
+Q1.mean     <- mapply(mean,x51[,c(3,4 )])  
+Q1.sd       <- mapply(sd,x51[,c(3,4)])
 Q1.z        <- qnorm(.975)   # wartosc Z95
 Q1.mean - Q1.sd*Q1.z/sqrt(Q1.N)
 Q1.mean + Q1.sd*Q1.z/sqrt(Q1.N)
+#wariacja
+d<-mapply(var,x52[,c(3,4)])
+((2*Q1.N-1)*d)/((sqrt(2*Q1.N-5)+qnorm(1 -0.95/2)))^2
+((2*Q1.N-1)*d)/((sqrt(2*Q1.N-5)-qnorm(1 -0.95/2)))^2
+#koeljny region
 
+x522<-subset(cos,cos$region=="Emilia_Romana")
+#œrednia
+Q12.N        <- length(x522$`fixed acidity`)# rozmiar probki
+Q12.mean     <- mapply(mean,x522[,c(3,4 )])  
+Q12.sd       <- mapply(sd,x522[,c(3,4)])
+Q12.z        <- qnorm(.975)   # wartosc Z95
+Q12.mean - Q12.sd*Q12.z/sqrt(Q12.N)
+Q12.mean + Q12.sd*Q12.z/sqrt(Q12.N)
+#wariacja
+d<-mapply(var,x522[,c(3,4)])
+((2*Q12.N-1)*d)/((sqrt(2*Q12.N-5)+qnorm(1 -0.95/2)))^2
+((2*Q12.N-1)*d)/((sqrt(2*Q12.N-5)-qnorm(1 -0.95/2)))^2
+
+
+#koeljny region
+
+x5222<-subset(cos,cos$region=="Bolonia")
+#œrednia
+Q122.N        <- length(x522$`fixed acidity`)# rozmiar probki
+Q122.mean     <- mapply(mean,x522[,c(3,4 )])  
+Q122.sd       <- mapply(sd,x522[,c(3,4)])
+Q122.z        <- qnorm(.975)   # wartosc Z95
+Q122.mean - Q122.sd*Q122.z/sqrt(Q122.N)
+Q122.mean + Q122.sd*Q122.z/sqrt(Q122.N)
+#wariacja
+d<-mapply(var,x5222[,c(3,4)])
+((2*Q122.N-1)*d)/((sqrt(2*Q122.N-5)+qnorm(1 -0.95/2)))^2
+((2*Q122.N-1)*d)/((sqrt(2*Q122.N-5)-qnorm(1 -0.95/2)))^2
+
+
+
+
+
+
+#zad 7
 #SprawdŸ czy poziom siarki istotnie zmieni³ siê po filtracji (zmienne sulphates i sulphates after filtering). Test wykonaj dla wszystkich win ogó³em jak i w podziale na kolor wina.
 #ogólny test
 testisto<-t.test(cos$sulphates,cos$`sulphates after filtering`)$p.value 

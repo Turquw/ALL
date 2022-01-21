@@ -1,3 +1,5 @@
+#Scharakteryzuj 5 wybranych zmiennych: minimum, pierwszy kwartyl, medina, œrednia, trzeci kwartyl, maksimum, odchylenie standardowe, wybran¹ miarê asymetrii i koncentracji w ka¿dej z 6 grup: wina czerwone z Katanii, wina bia³e z Katanii, wina czerwone z Bolonii itd.
+library(e1071)
 x1<-subset(cos,cos$region=="Bolonia")
 x1<-subset(x1,x1$color=="white")
 BoloniaWMin<-mapply(min,x1[,c(3,4,5,6,7 )])
@@ -75,4 +77,38 @@ CataniaRPerson<-3*(CataniaRMean-CataniaRMedian)/CataniaRSd
 CataniaRKurtiza<-mapply(kurtosis,x6[,c(3,4,5,6,7 )])
 
 
+library(normtest)
+
+
+#Zbuduj 95% przedzia³ ufnoœci dla œredniej i wariancji dla dwóch wybranych zmiennych osobno dla win z Bolonii, Katanii i Emilii Romany
+x51<-subset(cos,cos$region=="Catania")
+
+Q1.N        <- length(x51$`fixed acidity`)# rozmiar probki
+Q1.mean     <- mapply(mean,x6[,c(3,4 )])  
+Q1.sd       <- mapply(sd,x6[,c(3,4)])
+Q1.z        <- qnorm(.975)   # wartosc Z95
+Q1.mean - Q1.sd*Q1.z/sqrt(Q1.N)
+Q1.mean + Q1.sd*Q1.z/sqrt(Q1.N)
+
+#SprawdŸ czy poziom siarki istotnie zmieni³ siê po filtracji (zmienne sulphates i sulphates after filtering). Test wykonaj dla wszystkich win ogó³em jak i w podziale na kolor wina.
+#ogólny test
+testisto<-t.test(cos$sulphates,cos$`sulphates after filtering`)$p.value 
+ifelse (testisto <0.05, 
+       "Odrzucamy hipotezê zerow¹ na poziomie istotnoœci 0.05", 
+       "Nie ma podstaw do odrzucenia hipotezy zerowej na poziomie istotnoœci 
+0.05")
+#bia³e wino
+x12<-subset(cos,cos$color=="white")
+testisto1<-t.test(x12$sulphates,x12$`sulphates after filtering`)$p.value 
+ifelse (testisto1 <0.05, 
+        "Odrzucamy hipotezê zerow¹ na poziomie istotnoœci 0.05", 
+        "Nie ma podstaw do odrzucenia hipotezy zerowej na poziomie istotnoœci 
+0.05")
+#czerwone wina
+x13<-subset(cos,cos$color=="red")
+testisto12<-t.test(x13$sulphates,x13$`sulphates after filtering`)$p.value 
+ifelse (testisto12 <0.05, 
+        "Odrzucamy hipotezê zerow¹ na poziomie istotnoœci 0.05", 
+        "Nie ma podstaw do odrzucenia hipotezy zerowej na poziomie istotnoœci 
+0.05")
 

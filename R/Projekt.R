@@ -85,21 +85,21 @@ library(normtest)
 #Zbuduj 95% przedzia³ ufnoœci dla œredniej i wariancji dla dwóch wybranych zmiennych osobno dla win z Bolonii, Katanii i Emilii Romany
 x51<-subset(cos,cos$region=="Catania")
 #œrednia
-Q1.N        <- length(x52$`fixed acidity`)# rozmiar probki
+Q1.N        <- length(x51$`fixed acidity`)# rozmiar probki
 Q1.mean     <- mapply(mean,x51[,c(3,4 )])  
 Q1.sd       <- mapply(sd,x51[,c(3,4)])
 Q1.z        <- qnorm(.975)   # wartosc Z95
 Q1.mean - Q1.sd*Q1.z/sqrt(Q1.N)
 Q1.mean + Q1.sd*Q1.z/sqrt(Q1.N)
 #wariacja
-d<-mapply(var,x52[,c(3,4)])
+d<-mapply(var,x51[,c(3,4)])
 ((2*Q1.N-1)*d)/((sqrt(2*Q1.N-5)+qnorm(1 -0.95/2)))^2
 ((2*Q1.N-1)*d)/((sqrt(2*Q1.N-5)-qnorm(1 -0.95/2)))^2
 #koeljny region
 
-x522<-subset(cos,cos$region=="Emilia_Romana")
+x522<-subset(cos,cos$region=="Emilia Romana")
 #œrednia
-Q12.N        <- length(x522$`fixed acidity`)# rozmiar probki
+Q12.N        <- length(x522$`volatile acidity`)# rozmiar probki
 Q12.mean     <- mapply(mean,x522[,c(3,4 )])  
 Q12.sd       <- mapply(sd,x522[,c(3,4)])
 Q12.z        <- qnorm(.975)   # wartosc Z95
@@ -153,4 +153,22 @@ ifelse (testisto12 <0.05,
         "Odrzucamy hipotezê zerow¹ na poziomie istotnoœci 0.05", 
         "Nie ma podstaw do odrzucenia hipotezy zerowej na poziomie istotnoœci 
 0.05")
+
+
+#zad 8
+#Wybierz 2 zmienne charakterystyk wina. SprawdŸ czy œredni poziom ka¿dej zmiennej ró¿ni siê pomiêdzy grup¹ win czerwonych a bia³ych
+licz1<-x13[,c(3,4 )]
+licz2<-x12[,c(3,4 )]
+am.test<-t.test(licz1,licz2,paired=F)
+am.test$p.value
+#tak ró¿ni sie 
+#zad 9
+#Wybierz 2 zmienne charakterystyk wina. SprawdŸ czy wariancja ka¿dej zmiennej ró¿ni siê pomiêdzy grup¹ win czerwonych a bia³ych
+d1<-mapply(var,x12[,c(3,4)])
+d11<-mapply(var,x13[,c(3,4)])
+am.test2<-t.test(d1,d11,paired=F)
+am.test2$p.value
+#tak ró¿ni sie
+#zad 10
+#Wybierz 2 zmienne charakterystyk wina. SprawdŸ czy œredni poziom ka¿dej zmiennej ró¿ni siê pomiêdzy regionami W³och
 
